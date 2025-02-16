@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Stopwatch = () => {
   const [timer, setTimer] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [intervalId, setIntervalId] = useState(null);
+  //   const [intervalId, setIntervalId] = useState(null);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     if (isRunning) {
-      const id = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setTimer((prev) => prev + 1);
       }, 1000);
-      setIntervalId(id);
     } else {
-      clearInterval(intervalId);
-      setIntervalId(null);
+      clearInterval(intervalRef.current);
     }
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 
   const toggleHandler = () => {
@@ -26,10 +25,9 @@ const Stopwatch = () => {
   };
 
   const resetHandler = () => {
-    clearInterval(intervalId);
+    clearInterval(intervalRef.current);
     setTimer(0);
     setIsRunning(false);
-    setIntervalId(null);
   };
 
   return (
