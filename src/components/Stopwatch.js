@@ -17,6 +17,18 @@ const Stopwatch = () => {
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor(seconds / 60) % 60;
+    const secs = Math.floor(seconds % 60);
+
+    return {
+      hours: String(hours).padStart(2, "0"),
+      mins: String(mins).padStart(2, "0"),
+      secs: String(secs).padStart(2, "0"),
+    };
+  };
+
   const toggleHandler = () => {
     if (!isRunning) {
       setTimer((prev) => prev + 1);
@@ -30,11 +42,17 @@ const Stopwatch = () => {
     setIsRunning(false);
   };
 
+  const { hours, mins, secs } = formatTime(timer);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
-      <h1 className="text-lg font-bold text-white mb-3">
-        {timer} {timer > 0 ? `secs` : `sec`}
-      </h1>
+      <h1 className="text-lg font-bold text-white mb-3">StopWatch</h1>
+      <div className={`mb-3 ${isRunning && timer > 0 && "animate-pulse"}`}>
+        <span>{hours} : </span>
+        <span>{mins} : </span>
+        <span>{secs}</span>
+      </div>
+
       <div className="flex gap-3">
         {!isRunning && timer === 0 && (
           <button
