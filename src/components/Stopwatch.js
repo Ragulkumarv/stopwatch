@@ -9,23 +9,26 @@ const Stopwatch = () => {
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
-        setTimer((prev) => prev + 1);
-      }, 1000);
+        setTimer((prev) => prev + 10);
+      }, 10); //10 ms
     } else {
       clearInterval(intervalRef.current);
     }
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor(seconds / 60) % 60;
-    const secs = Math.floor(seconds % 60);
+  const formatTime = (ms) => {
+    // const hours = Math.floor(seconds / 3600);
+    // const mins = Math.floor(seconds / 60) % 60;
+    // const secs = Math.floor(seconds % 60);
+    const mins = Math.floor(ms / 60000);
+    const secs = Math.floor((ms % 60000) / 1000);
+    const milli = Math.floor((ms % 1000) / 10);
 
     return {
-      hours: String(hours).padStart(2, "0"),
       mins: String(mins).padStart(2, "0"),
       secs: String(secs).padStart(2, "0"),
+      milli: String(milli).padStart(2, "0"),
     };
   };
 
@@ -42,15 +45,15 @@ const Stopwatch = () => {
     setIsRunning(false);
   };
 
-  const { hours, mins, secs } = formatTime(timer);
+  const { mins, secs, milli } = formatTime(timer);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
       <h1 className="text-lg font-bold text-white mb-3">StopWatch</h1>
       <div className={`mb-3 ${isRunning && timer > 0 && "animate-pulse"}`}>
-        <span>{hours} : </span>
         <span>{mins} : </span>
-        <span>{secs}</span>
+        <span>{secs} : </span>
+        <span>{milli}</span>
       </div>
 
       <div className="flex gap-3">
